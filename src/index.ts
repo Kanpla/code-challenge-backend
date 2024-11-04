@@ -13,11 +13,6 @@ const TOKEN = "abcDEF123";
 
 const app = express();
 
-app.get("/total", (req, res) => {
-  console.log(basket);
-  res.status(200).json({ total: basketTotal });
-});
-
 app.post("/product/:id", async (req, res) => {
   console.log("fetching");
   const response = await fetch(
