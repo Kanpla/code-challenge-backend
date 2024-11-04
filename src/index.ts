@@ -13,7 +13,7 @@ const TOKEN = "abcDEF123";
 
 const app = express();
 
-app.post("/product/:id", async (req, res) => {
+async function addToBasket(productId: string): Promise<BasketItem | null> {
   console.log("fetching");
   const response = await fetch(
     `https://kanpla-code-challenge.up.railway.app/products/`,
@@ -45,12 +45,21 @@ app.post("/product/:id", async (req, res) => {
   }, {} as Record<string, BasketItem>);
   console.log(products);
 
-  const product = products[req.url.split("/")[2] || "noProduct"] || "noProduct"; // no id will be "noProduct", so it's fine to do this
+  const product = products[productId] || "noProduct"; // no id will be "noProduct", so it's fine to do this
 
   if (product !== "noProduct") {
     basket.push(product);
     basketTotal += product.price;
-    res.status(200).json({ product, total: basketTotal });
+    return product;
+  }
+  return null;
+}
+
+app.post("/product/:id", async (req, res) => {
+  const basketItem = await addToBasket(req.params.id);
+
+  if (basketItem) {
+    res.status(200).json({ newItem: basketItem, total: basketTotal });
   } else {
     res.status(404).json({ message: "Product not found" });
   }
