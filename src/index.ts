@@ -1,6 +1,12 @@
 import http from "http";
 
-const basket = [];
+type BasketItem = {
+  id: string;
+  name: string;
+  price: number;
+};
+
+const basket: BasketItem[] = [];
 let basketTotal = 0;
 
 const server = http.createServer(async (req, res) => {
@@ -50,10 +56,11 @@ const server = http.createServer(async (req, res) => {
         price: calculatePriceWithVat(item.price_unit, item.vat_rate),
       };
       return acc;
-    }, {} as any);
+    }, {} as Record<string, BasketItem>);
     console.log(products);
 
-    const product = products[req.url.split("/")[2] || "noProduct"]; // no id will be "noProduct", so it's fine to do this
+    const product =
+      products[req.url.split("/")[2] || "noProduct"] || "noProduct"; // no id will be "noProduct", so it's fine to do this
 
     if (product !== "noProduct") {
       basket.push(product);
