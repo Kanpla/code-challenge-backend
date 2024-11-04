@@ -43,12 +43,12 @@ export async function addToBasket(
   }, {} as Record<string, BasketItem>);
   console.log(products);
 
-  const product = products[productId] || "noProduct"; // no id will be "noProduct", so it's fine to do this
-
-  if (product !== "noProduct") {
-    basket.push(product);
-    basketTotal += product.price;
-    return product;
+  const product = products[productId];
+  if (!product) {
+    return null;
   }
-  return null;
+
+  basket.push(product);
+  basketTotal += product.price;
+  return product;
 }
