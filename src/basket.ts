@@ -12,7 +12,6 @@ const TOKEN = "abcDEF123";
 export async function addToBasket(
   productId: string
 ): Promise<BasketItem | null> {
-  console.log("fetching");
   const response = await fetch(
     `https://kanpla-code-challenge.up.railway.app/products/`,
     {
@@ -41,7 +40,6 @@ export async function addToBasket(
     };
     return acc;
   }, {} as Record<string, BasketItem>);
-  console.log(products);
 
   const product = products[productId];
   if (!product) {
