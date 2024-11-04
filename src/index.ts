@@ -1,5 +1,5 @@
 import express from "express";
-import { addToBasket, basketTotal } from "./basket.js";
+import { addToBasket, basketTotal, orderAndPay } from "./basket.js";
 
 const app = express();
 
@@ -11,6 +11,11 @@ app.post("/product/:id", async (req, res) => {
   } else {
     res.status(404).json({ message: "Product not found" });
   }
+});
+
+app.post("/orderAndPay", async (req, res) => {
+  await orderAndPay();
+  res.status(200).json({ message: "Order placed successfully" });
 });
 
 app.listen(3000, () => {

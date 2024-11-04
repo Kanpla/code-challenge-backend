@@ -1,4 +1,4 @@
-export const basket: BasketItem[] = [];
+export let basket: BasketItem[] = [];
 export let basketTotal = 0;
 
 type BasketItem = {
@@ -49,4 +49,51 @@ export async function addToBasket(
   basket.push(product);
   basketTotal += product.price;
   return product;
+}
+
+export async function orderAndPay() {
+  const createOrderResponse = await fetch(
+    "https://kanpla-code-challenge.up.railway.app/orders/",
+    {
+      method: "POST",
+      headers: { "X-Auth-User": TOKEN, "Content-Type": "application/json" },
+      body: JSON.stringify({ total: basketTotal }),
+    }
+  );
+  const createOrderData = (await createOrderResponse.json()) as { id: string };
+  const orderId = createOrderData.id;
+
+  const createPaymentResponse = await fetch(
+    "https://kanpla-code-challenge.up.railway.app/payments/",
+    {
+      method: "POST",
+      headers: { "X-Auth-User": "", "Content-Type": "application/json" },
+      body: JSON.stringify({ order_id: orderId, amount: basketTotal }),
+    }
+  );
+  const createPaymentData = (await createPaymentResponse.json()) as {
+    id: string;
+    amount: number;
+    user_id: string;
+    created_at: string;
+    status: string;
+    type: string;
+    order_id: string;
+  };
+  if (createPaymentData.status !== "complete") {
+    throw new Error("Payment failed");
+  }
+
+  const response = await fetch(
+    `https://kanpla-code-challenge.up.railway.app/orders/${orderId}`,
+    {
+      method: "PATCH",
+      headers: { "X-Auth-User": "", "Content-Type": "application/json" },
+      body: JSON.stringify({ status: "completed" }),
+    }
+  );
+  const data = await response.json();
+
+  basket = [];
+  basketTotal = 0;
 }
