@@ -1,5 +1,5 @@
 {
-  "name": "kanpla-challenge-basket",
+  "name": "kanpla-code-challenge-backend",
   "type": "module",
   "scripts": {
     "build": "tsc",
