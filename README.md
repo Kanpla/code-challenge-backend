@@ -69,4 +69,4 @@ The app uses a mock API server for data fetching and order creation. Please use 
 
 >**Note**: The API is intentionally sometimes slow and a bit flaky to simulate real-world conditions.
 
-You can find the API documentation [here](https://kanpla.github.io/react-native-challenge/).
+You can find the API documentation [here](https://kanpla-code-challenge.up.railway.app/docs).
